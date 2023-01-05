@@ -5,15 +5,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
-import java.util.Objects;
-
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
-public final class Endereco {
+public final class Address {
     @NotBlank
     private String logradouro;
     @NotBlank
@@ -28,13 +26,13 @@ public final class Endereco {
     private String numero;
     private String complemento;
 
-    public Endereco(Endereco endereco) {
-        this.logradouro = endereco.getLogradouro();
-        this.cep = endereco.getCep();
-        this.bairro = endereco.getBairro();
-        this.cidade = endereco.getCidade();
-        this.uf = endereco.getUf();
-        this.numero = endereco.getNumero();
-        this.complemento = endereco.getComplemento();
+    public Address(Address address) {
+        this.logradouro = address.getLogradouro();
+        this.cep = address.getCep();
+        this.bairro = address.getBairro();
+        this.cidade = address.getCidade();
+        this.uf = address.getUf();
+        this.numero = address.getNumero();
+        this.complemento = address.getComplemento();
     }
 }

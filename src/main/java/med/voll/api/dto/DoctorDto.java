@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-public record MedicoDto(
+public record DoctorDto(
         @NotBlank
         String nome,
         @NotBlank
@@ -16,10 +16,10 @@ public record MedicoDto(
         @Pattern(regexp = "\\d{4,6}")
         String crm,
         @NotNull
-        Especialidade especialidade,
+        Speciality especialidade,
         @NotBlank
         String telefone,
         @NotNull
         @Valid
-        Endereco endereco) {
+        Address endereco) {
 }

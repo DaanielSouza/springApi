@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import med.voll.api.dto.Endereco;
-import med.voll.api.dto.PacienteDto;
+import med.voll.api.dto.Address;
+import med.voll.api.dto.PatientDto;
 
 @Entity(name = "pacientes")
 @Table(name = "pacientes")
@@ -14,7 +14,7 @@ import med.voll.api.dto.PacienteDto;
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode(of = "id")
-public class PacienteEntity {
+public class PatientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,13 +25,13 @@ public class PacienteEntity {
 
     private String cpf;
 
-    private Endereco endereco;
+    private Address endereco;
 
-    public PacienteEntity(PacienteDto p){
+    public PatientEntity(PatientDto p){
         this.email = p.email();
         this.telefone = p.telefone();
         this.nome = p.nome();
-        this.endereco = new Endereco(p.endereco());
+        this.endereco = new Address(p.endereco());
         this.cpf = p.cpf();
     }
 }

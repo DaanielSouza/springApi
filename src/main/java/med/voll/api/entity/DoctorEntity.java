@@ -5,17 +5,17 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import med.voll.api.dto.Endereco;
-import med.voll.api.dto.Especialidade;
-import med.voll.api.dto.MedicoDto;
+import med.voll.api.dto.Address;
+import med.voll.api.dto.Speciality;
+import med.voll.api.dto.DoctorDto;
 
-@Table(name = "medico")
-@Entity(name = "medico")
+@Table(name = "medicos")
+@Entity(name = "medicos")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode(of = "id")
-public class MedicoEntity {
+public class DoctorEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,17 +25,17 @@ public class MedicoEntity {
 
     private String telefone;
     @Enumerated(EnumType.STRING)
-    private Especialidade especialidade;
+    private Speciality especialidade;
 
     @Embedded
-    private Endereco endereco;
+    private Address endereco;
 
-    public MedicoEntity(MedicoDto medico) {
+    public DoctorEntity(DoctorDto medico) {
         this.nome = medico.nome();
         this.email = medico.email();
         this.crm = medico.crm();
         this.especialidade = medico.especialidade();
-        this.endereco = new Endereco(medico.endereco());
+        this.endereco = new Address(medico.endereco());
         this.telefone = medico.telefone();
     }
 }
