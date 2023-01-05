@@ -9,8 +9,8 @@ import med.voll.api.dto.Endereco;
 import med.voll.api.dto.Especialidade;
 import med.voll.api.dto.MedicoDto;
 
-@Table(name = "medicos")
-@Entity(name = "medicos")
+@Table(name = "medico")
+@Entity(name = "medico")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -22,6 +22,8 @@ public class MedicoEntity {
     private String nome;
     private String email;
     private String crm;
+
+    private String telefone;
     @Enumerated(EnumType.STRING)
     private Especialidade especialidade;
 
@@ -34,5 +36,6 @@ public class MedicoEntity {
         this.crm = medico.crm();
         this.especialidade = medico.especialidade();
         this.endereco = new Endereco(medico.endereco());
+        this.telefone = medico.telefone();
     }
 }

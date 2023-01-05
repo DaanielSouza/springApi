@@ -17,6 +17,8 @@ public record MedicoDto(
         String crm,
         @NotNull
         Especialidade especialidade,
+        @NotBlank
+        String telefone,
         @NotNull
         @Valid
         Endereco endereco) {
