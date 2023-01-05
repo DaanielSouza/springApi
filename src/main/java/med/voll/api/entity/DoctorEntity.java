@@ -6,8 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import med.voll.api.dto.Address;
-import med.voll.api.dto.Speciality;
+import med.voll.api.dto.DoctorDataUpdate;
 import med.voll.api.dto.DoctorDto;
+import med.voll.api.dto.Speciality;
 
 @Table(name = "medicos")
 @Entity(name = "medicos")
@@ -37,5 +38,19 @@ public class DoctorEntity {
         this.especialidade = medico.especialidade();
         this.endereco = new Address(medico.endereco());
         this.telefone = medico.telefone();
+    }
+
+    public void updateData(DoctorDataUpdate doctor) {
+        if (doctor.nome() != null) {
+            this.nome = doctor.nome();
+        }
+
+        if (doctor.telefone() != null) {
+            this.telefone = doctor.telefone();
+        }
+
+        if (doctor.endereco() != null) {
+            this.endereco = new Address(doctor.endereco());
+        }
     }
 }
