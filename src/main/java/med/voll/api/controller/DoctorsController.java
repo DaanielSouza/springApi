@@ -6,6 +6,9 @@ import med.voll.api.dto.DoctorDto;
 import med.voll.api.entity.DoctorEntity;
 import med.voll.api.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +27,7 @@ public class DoctorsController {
     }
 
     @GetMapping
-    public List<DoctorsDataList> buscaMedicos(){
-      return repository.findAll().stream().map(DoctorsDataList::new).toList();
+    public Page<DoctorsDataList> buscaMedicos(@PageableDefault(size = 10, sort = {"especialidade","nome","crm"}) Pageable pagination){
+      return repository.findAll(pagination).map(DoctorsDataList::new);
     }
 }

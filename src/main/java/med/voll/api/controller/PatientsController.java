@@ -6,10 +6,11 @@ import med.voll.api.dto.PatientsDataList;
 import med.voll.api.entity.PatientEntity;
 import med.voll.api.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/pacientes")
@@ -25,7 +26,7 @@ public class PatientsController {
     }
 
     @GetMapping
-    public List<PatientsDataList> findPatients(){
-        return repository.findAll().stream().map(PatientsDataList::new).toList();
+    public Page<PatientsDataList> findPatients(@PageableDefault(size = 10, sort = {"nome","email","cpf"}) Pageable pagination){
+        return repository.findAll(pagination).map(PatientsDataList::new);
     }
 }
