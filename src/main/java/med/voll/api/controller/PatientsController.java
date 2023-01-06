@@ -41,4 +41,16 @@ public class PatientsController {
             entity.updateData(p);
         }
     }
+
+    @DeleteMapping("/id")
+    @Transactional
+    public void deletePatient(Long id){
+        Optional<PatientEntity> patient = repository.findById(id);
+        if(patient.isPresent()){
+            PatientEntity finalPatient = patient.get();
+            finalPatient.deactivate();
+        } else {
+            throw new IllegalArgumentException("Erro ao desativar paciente");
+        }
+    }
 }

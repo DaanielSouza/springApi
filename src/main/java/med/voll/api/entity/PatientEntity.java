@@ -28,12 +28,15 @@ public class PatientEntity {
 
     private Address endereco;
 
+    private Boolean status;
+
     public PatientEntity(PatientDto p){
         this.email = p.email();
         this.telefone = p.telefone();
         this.nome = p.nome();
         this.endereco = new Address(p.endereco());
         this.cpf = p.cpf();
+        this.status = true;
     }
 
     public void updateData(PatientDataUpdate p) {
@@ -46,5 +49,9 @@ public class PatientEntity {
         if(p.endereco() != null){
             this.endereco = new Address(p.endereco());
         }
+    }
+
+    public void deactivate() {
+        this.status = false;
     }
 }

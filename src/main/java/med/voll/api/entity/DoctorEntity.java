@@ -25,6 +25,8 @@ public class DoctorEntity {
     private String crm;
 
     private String telefone;
+
+    private Boolean status;
     @Enumerated(EnumType.STRING)
     private Speciality especialidade;
 
@@ -38,6 +40,7 @@ public class DoctorEntity {
         this.especialidade = medico.especialidade();
         this.endereco = new Address(medico.endereco());
         this.telefone = medico.telefone();
+        this.status = true;
     }
 
     public void updateData(DoctorDataUpdate doctor) {
@@ -52,5 +55,9 @@ public class DoctorEntity {
         if (doctor.endereco() != null) {
             this.endereco = new Address(doctor.endereco());
         }
+    }
+
+    public void deactivateDoctor(){
+        this.status = false;
     }
 }

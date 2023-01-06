@@ -13,7 +13,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -30,7 +29,7 @@ public class DoctorsController {
 
     @GetMapping
     public Page<DoctorsDataList> findDoctors(@PageableDefault(size = 10, sort = {"especialidade","nome","crm"}) Pageable pagination){
-      return repository.findAll(pagination).map(DoctorsDataList::new);
+      return repository.findAllByStatusTrue(pagination).map(DoctorsDataList::new);
     }
 
     @PutMapping
@@ -40,6 +39,18 @@ public class DoctorsController {
         if(doc.isPresent()){
             DoctorEntity doctor = doc.get();
             doctor.updateData(medico);
+        } else {
+            throw new IllegalArgumentException("Médico não encontrado em nosso banco de dados");
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public void deleteDoctor(@PathVariable Long id){
+        Optional<DoctorEntity> doc = repository.findById(id);
+        if(doc.isPresent()){
+            DoctorEntity doctor = doc.get();
+            doctor.deactivateDoctor();
         } else {
             throw new IllegalArgumentException("Médico não encontrado em nosso banco de dados");
         }
