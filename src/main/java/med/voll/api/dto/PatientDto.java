@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import med.voll.api.entity.PatientEntity;
 
 public record PatientDto(
         @NotBlank
@@ -20,4 +21,7 @@ public record PatientDto(
         @NotNull
         @Valid
         Address endereco) {
+    public PatientDto(PatientEntity finalPatient) {
+        this(finalPatient.getNome(), finalPatient.getEmail(), finalPatient.getTelefone(), finalPatient.getCpf(), finalPatient.getEndereco());
+    }
 }

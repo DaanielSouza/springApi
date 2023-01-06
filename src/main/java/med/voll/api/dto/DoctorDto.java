@@ -23,4 +23,7 @@ public record DoctorDto(
         @NotNull
         @Valid
         Address endereco) {
+    public DoctorDto(DoctorEntity doctor) {
+            this(doctor.getNome(),doctor.getEmail(),doctor.getCrm(),doctor.getEspecialidade(),doctor.getTelefone(),doctor.getEndereco());
+    }
 }

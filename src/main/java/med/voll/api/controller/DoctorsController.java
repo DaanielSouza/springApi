@@ -4,14 +4,17 @@ import jakarta.validation.Valid;
 import med.voll.api.dto.DoctorDataUpdate;
 import med.voll.api.dto.DoctorsDataList;
 import med.voll.api.dto.DoctorDto;
+import med.voll.api.dto.PatientDto;
 import med.voll.api.entity.DoctorEntity;
 import med.voll.api.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Optional;
 
@@ -23,36 +26,53 @@ public class DoctorsController {
 
     @PostMapping
     @Transactional
-    public void addDoctor(@RequestBody @Valid DoctorDto medico){
-        repository.save(new DoctorEntity(medico));
+    public ResponseEntity<DoctorDto> addDoctor(@RequestBody @Valid DoctorDto doc, UriComponentsBuilder uriBuilder) {
+        DoctorEntity doctor = new DoctorEntity(doc);
+        repository.save(doctor);
+        var uri = uriBuilder.path("/medicos/{id}").buildAndExpand(doctor.getId()).toUri();
+        return ResponseEntity.created(uri).body(new DoctorDto(doctor));
     }
 
     @GetMapping
-    public Page<DoctorsDataList> findDoctors(@PageableDefault(size = 10, sort = {"especialidade","nome","crm"}) Pageable pagination){
-      return repository.findAllByStatusTrue(pagination).map(DoctorsDataList::new);
+    public ResponseEntity<Page<DoctorsDataList>> findDoctors(@PageableDefault(size = 10, sort = {"especialidade", "nome", "crm"}) Pageable pagination) {
+        var page = repository.findAllByStatusTrue(pagination).map(DoctorsDataList::new);
+
+        if (page.getSize() > 0) {
+            return ResponseEntity.ok(page);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DoctorDto> findDoctor(@PathVariable Long id) {
+        Optional<DoctorEntity> doctorOpt = repository.findOneByIdAndStatusTrue(id);
+        return doctorOpt.map(d -> ResponseEntity.ok(new DoctorDto(d))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping
     @Transactional
-    public void updateDoctor(@RequestBody @Valid DoctorDataUpdate medico){
+    public ResponseEntity<DoctorDto> updateDoctor(@RequestBody @Valid DoctorDataUpdate medico) {
         Optional<DoctorEntity> doc = repository.findById(medico.id());
-        if(doc.isPresent()){
+        if (doc.isPresent()) {
             DoctorEntity doctor = doc.get();
             doctor.updateData(medico);
+            return ResponseEntity.ok(new DoctorDto(doctor));
         } else {
-            throw new IllegalArgumentException("Médico não encontrado em nosso banco de dados");
+            return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/{id}")
     @Transactional
-    public void deleteDoctor(@PathVariable Long id){
+    public ResponseEntity deleteDoctor(@PathVariable Long id) {
         Optional<DoctorEntity> doc = repository.findById(id);
-        if(doc.isPresent()){
+        if (doc.isPresent()) {
             DoctorEntity doctor = doc.get();
             doctor.deactivateDoctor();
-        } else {
-            throw new IllegalArgumentException("Médico não encontrado em nosso banco de dados");
+            return ResponseEntity.noContent().build();
         }
+
+        return ResponseEntity.notFound().build();
     }
 }
