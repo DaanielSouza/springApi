@@ -36,43 +36,30 @@ public class DoctorsController {
     @GetMapping
     public ResponseEntity<Page<DoctorsDataList>> findDoctors(@PageableDefault(size = 10, sort = {"especialidade", "nome", "crm"}) Pageable pagination) {
         var page = repository.findAllByStatusTrue(pagination).map(DoctorsDataList::new);
-
-        if (page.getSize() > 0) {
-            return ResponseEntity.ok(page);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(page);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DoctorDto> findDoctor(@PathVariable Long id) {
         Optional<DoctorEntity> doctorOpt = repository.findOneByIdAndStatusTrue(id);
-        return doctorOpt.map(d -> ResponseEntity.ok(new DoctorDto(d))).orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.ok(new DoctorDto(doctorOpt.get()));
     }
 
     @PutMapping
     @Transactional
     public ResponseEntity<DoctorDto> updateDoctor(@RequestBody @Valid DoctorDataUpdate medico) {
         Optional<DoctorEntity> doc = repository.findById(medico.id());
-        if (doc.isPresent()) {
-            DoctorEntity doctor = doc.get();
-            doctor.updateData(medico);
-            return ResponseEntity.ok(new DoctorDto(doctor));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        DoctorEntity doctor = doc.get();
+        doctor.updateData(medico);
+        return ResponseEntity.ok(new DoctorDto(doctor));
     }
 
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity deleteDoctor(@PathVariable Long id) {
         Optional<DoctorEntity> doc = repository.findById(id);
-        if (doc.isPresent()) {
-            DoctorEntity doctor = doc.get();
-            doctor.deactivateDoctor();
-            return ResponseEntity.noContent().build();
-        }
-
-        return ResponseEntity.notFound().build();
+        DoctorEntity doctor = doc.get();
+        doctor.deactivateDoctor();
+        return ResponseEntity.noContent().build();
     }
 }
